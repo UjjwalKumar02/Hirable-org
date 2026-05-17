@@ -1,0 +1,26 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum AccountType {
+  DEFAULT
+  GOOGLE
+}
+
+model User {
+  id           String      @default(uuid())
+  email        String      @unique
+  username     String
+  avatar       String?
+  password     String?
+  accountType  AccountType @default(DEFAULT)
+  isVerified   Boolean     @default(false)
+  otp          String?
+  otpValidTime DateTime?
+  createdAt    DateTime    @default(now())
+}
