@@ -21,6 +21,8 @@ authRouter.post("/login", onLogin);
 authRouter.post("/logout", onLogout);
 authRouter.get("/me", authMiddleware, onGetMe);
 authRouter.post("/refresh-token", refreshTokenMiddleware, onRefreshToken);
+
+// Remove later
 authRouter.get("/get-users", onGetUsers);
 
 export default authRouter;

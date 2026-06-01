@@ -17,7 +17,11 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={geist.className}>{children}</body>
+      <body className={geist.className}>
+        {children}
+
+        <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+      </body>
     </html>
   );
 }

@@ -1,4 +1,4 @@
-import type { NextFunction, Request, Response } from "express";
+import type { NextFunction, Response } from "express";
 import jwt from "jsonwebtoken";
 import "dotenv/config";
 import type { AuthRequest } from "./auth.middleware.js";
@@ -28,6 +28,6 @@ export const refreshTokenMiddleware = async (
     next();
   } catch (error: any) {
     console.log(error.message);
-    res.status(400).json({ error: error.message });
+    res.status(500).json({ error: "Internal server error" });
   }
 };

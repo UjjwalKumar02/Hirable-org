@@ -1,8 +1,8 @@
-import { emailQueue } from "../../queue/email.queue.js";
+import { emailQueue } from "../../queues/email.queue.js";
 
 export const enqueueEmail = async (data: {
   to: string;
-  emailType: "verify-email" | "form-limit" | "rate-limit";
+  emailType: "verify-email" | "credit-purchase" | "form-limit" | "rate-limit";
   payload: any;
 }) => {
   console.log("Adding job in queue", data);

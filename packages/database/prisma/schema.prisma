@@ -7,20 +7,91 @@ datasource db {
   provider = "postgresql"
 }
 
+model User {
+  id          String      @id @default(uuid())
+  email       String      @unique
+  username    String
+  avatar      String?
+  password    String?
+  accountType AccountType @default(DEFAULT)
+  userRole    UserRole    @default(USER)
+
+  isVerified   Boolean   @default(false)
+  otp          String?
+  otpValidTime DateTime?
+
+  creditBalance Int            @default(0)
+  paymentOrders PaymentOrder[]
+  creditLedger  CreditLedger[]
+
+  createdAt DateTime @default(now())
+}
+
+model CreditPackage {
+  id           String  @id @default(uuid())
+  name         String
+  credits      Int
+  priceInPaise Int
+  isActive     Boolean @default(true)
+
+  paymentOrders PaymentOrder[]
+
+  createdAt DateTime @default(now())
+}
+
+model PaymentOrder {
+  id              String        @id @default(uuid())
+  userId          String
+  user            User          @relation(references: [id], fields: [userId])
+  creditPackageId String
+  creditPackage   CreditPackage @relation(references: [id], fields: [creditPackageId])
+
+  razorpayOrderId   String? @unique
+  razorpayPaymentId String? @unique
+  razorpaySignature String?
+
+  amountInPaise  Int
+  creditsToGrant Int
+  status         PaymentStatus @default(CREATED)
+
+  failureReason String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model CreditLedger {
+  id     String @id @default(uuid())
+  userId String
+  user   User   @relation(references: [id], fields: [userId])
+
+  type CreditTransactionType
+
+  amount          Int
+  previousBalance Int
+  currentBalance  Int
+  referenceId     String @unique
+
+  createdAt DateTime @default(now())
+}
+
 enum AccountType {
   DEFAULT
   GOOGLE
 }
 
-model User {
-  id           String      @default(uuid())
-  email        String      @unique
-  username     String
-  avatar       String?
-  password     String?
-  accountType  AccountType @default(DEFAULT)
-  isVerified   Boolean     @default(false)
-  otp          String?
-  otpValidTime DateTime?
-  createdAt    DateTime    @default(now())
+enum UserRole {
+  USER
+  ADMIN
+}
+
+enum PaymentStatus {
+  CREATED
+  PAID
+  FAILED
+}
+
+enum CreditTransactionType {
+  PURCHASE
+  USAGE
 }

@@ -1,7 +1,5 @@
 import type { Request, Response } from "express";
 import { LoginDTO, SignupDTO, verifyEmailDTO } from "../dto/auth.dto.js";
-import { prisma } from "@repo/database/client";
-import bcrypt from "bcrypt";
 import { generateCode, generateJWT } from "../utils/auth.util.js";
 import {
   ACCESS_JWT_LIMIT,
@@ -10,6 +8,8 @@ import {
 import type { AuthRequest } from "../../../middlewares/auth.middleware.js";
 import { enqueueEmail } from "../../email/email.service.js";
 import { OTP_TIME_LIMIT } from "../../../config/otp.config.js";
+import { prisma } from "@repo/database/client";
+import bcrypt from "bcrypt";
 
 // Signup handler
 export const onSignup = async (req: Request, res: Response) => {
@@ -30,6 +30,7 @@ export const onSignup = async (req: Request, res: Response) => {
         email,
         password: hashedPassword,
         accountType: "DEFAULT",
+        userRole: "ADMIN",
         isVerified: false,
       },
     });
@@ -60,7 +61,7 @@ export const onSignup = async (req: Request, res: Response) => {
     res.status(201).json({ message: "Signup success.", userId: newUser.id });
   } catch (error: any) {
     console.log(error.message);
-    res.status(400).json({ error: error.message });
+    res.status(500).json({ error: "Internal server error" });
   }
 };
 
@@ -96,7 +97,8 @@ export const onVerifyEmail = async (req: Request, res: Response) => {
 
     res.status(200).json({ message: "Email verification success." });
   } catch (error: any) {
-    res.status(400).json({ error: error.message });
+    console.log(error.message);
+    res.status(500).json({ error: "Internal server error" });
   }
 };
 
@@ -132,7 +134,8 @@ export const onResendOTP = async (req: Request, res: Response) => {
 
     res.status(200).json({ message: "OTP regeneration success" });
   } catch (error: any) {
-    res.status(400).json({ error: error.message });
+    console.log(error.message);
+    res.status(500).json({ error: "Internal server error" });
   }
 };
 
@@ -163,7 +166,7 @@ export const onGetMe = async (req: AuthRequest, res: Response) => {
     });
   } catch (error: any) {
     console.log(error.message);
-    res.status(400).json({ error: error.message });
+    res.status(500).json({ error: "Internal server error" });
   }
 };
 
@@ -199,11 +202,15 @@ export const onLogin = async (req: Request, res: Response) => {
 
     const accessToken = await generateJWT({
       userId: user.id,
+      userRole: user.userRole,
+      userEmail: user.email,
       secret: process.env.ACCESS_JWT_SECRET!,
       limit: ACCESS_JWT_LIMIT,
     });
     const refreshToken = await generateJWT({
       userId: user.id,
+      userRole: user.userRole,
+      userEmail: user.email,
       secret: process.env.REFRESH_JWT_SECRET!,
       limit: REFRESH_JWT_LIMIT,
     });
@@ -227,7 +234,7 @@ export const onLogin = async (req: Request, res: Response) => {
     res.status(200).json({ message: "Login success." });
   } catch (error: any) {
     console.log(error.message);
-    res.status(400).json({ error: error.message });
+    res.status(500).json({ error: "Internal server error" });
   }
 };
 
@@ -249,7 +256,7 @@ export const onLogout = async (req: Request, res: Response) => {
     res.status(200).json({ message: "Logout success." });
   } catch (error: any) {
     console.log(error.message);
-    res.status(400).json({ error: error.message });
+    res.status(500).json({ error: "Internal server error" });
   }
 };
 
@@ -272,11 +279,15 @@ export const onRefreshToken = async (req: AuthRequest, res: Response) => {
 
     const accessToken = await generateJWT({
       userId: user.id,
+      userRole: user.userRole,
+      userEmail: user.email,
       secret: process.env.ACCESS_JWT_SECRET!,
       limit: ACCESS_JWT_LIMIT,
     });
     const refreshToken = await generateJWT({
       userId: user.id,
+      userRole: user.userRole,
+      userEmail: user.email,
       secret: process.env.REFRESH_JWT_SECRET!,
       limit: REFRESH_JWT_LIMIT,
     });
@@ -300,7 +311,7 @@ export const onRefreshToken = async (req: AuthRequest, res: Response) => {
     res.status(200).json({ message: "Token refresh success." });
   } catch (error: any) {
     console.log(error.message);
-    res.status(400).json({ error: error.message });
+    res.status(500).json({ error: "Internal server error" });
   }
 };
 
@@ -312,6 +323,6 @@ export const onGetUsers = async (req: Request, res: Response) => {
     res.status(200).json({ users });
   } catch (error: any) {
     console.log(error.message);
-    res.status(400).json({ error: error.message });
+    res.status(500).json({ error: "Internal server error" });
   }
 };

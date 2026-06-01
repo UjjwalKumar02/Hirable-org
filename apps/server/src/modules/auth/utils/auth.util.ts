@@ -2,16 +2,24 @@ import jwt from "jsonwebtoken";
 
 export const generateJWT = async ({
   userId,
+  userRole,
+  userEmail,
   secret,
   limit,
 }: {
   userId: string;
+  userRole: "USER" | "ADMIN";
+  userEmail: string;
   secret: string;
   limit: number;
 }) => {
-  const token = await jwt.sign({ id: userId }, secret, {
-    expiresIn: limit,
-  });
+  const token = await jwt.sign(
+    { id: userId, email: userEmail, role: userRole },
+    secret,
+    {
+      expiresIn: limit,
+    },
+  );
 
   return token;
 };

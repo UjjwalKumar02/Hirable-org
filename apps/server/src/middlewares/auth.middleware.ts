@@ -4,6 +4,8 @@ import "dotenv/config";
 
 export interface AuthRequest extends Request {
   userId?: string;
+  userRole?: "USER" | "ADMIN";
+  userEmail?: string;
 }
 
 export const authMiddleware = async (
@@ -28,9 +30,11 @@ export const authMiddleware = async (
     }
 
     req.userId = decoded.id;
+    req.userEmail = decoded.email;
+    req.userRole = decoded.role;
     next();
   } catch (error: any) {
     console.log(error.message);
-    res.status(400).json({ error: error.message });
+    res.status(500).json({ error: "Internal server error" });
   }
 };

@@ -1,7 +1,7 @@
 import { Job, Worker } from "bullmq";
-import { sendEmail } from "./config/nodemailer.config.js";
-import { emailDLQ } from "./queue/email.queue.js";
-import { redisConnection } from "./config/redis.config.js";
+import { emailDLQ } from "../queues/email.queue.js";
+import { sendEmail } from "../lib/nodemailer.js";
+import { redisConnection } from "../lib/redis.js";
 
 const worker = new Worker(
   "email_queue",
@@ -20,6 +20,16 @@ const worker = new Worker(
           to,
           subject: "Email verification",
           body: `To verify your email, please enter the ${OTP}`,
+        });
+      } else if (emailType === "credit-purchase") {
+        const credits = payload.credits;
+
+        console.log("Sending email from worker...");
+
+        await sendEmail({
+          to,
+          subject: "Credits purchase",
+          body: `The credits equals to ${credits} is added to your account`,
         });
       }
     } catch (error: any) {

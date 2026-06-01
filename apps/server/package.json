@@ -7,7 +7,7 @@
     "build": "npx tsc -b",
     "start": "node ./dist/server.js",
     "dev": "pnpm build && pnpm start",
-    "email-worker": "node ./dist/worker.js"
+    "dev:email-worker": "node ./dist/workers/email.worker.js"
   },
   "type": "module",
   "keywords": [],
@@ -24,6 +24,7 @@
     "ioredis": "^5.10.1",
     "jsonwebtoken": "^9.0.3",
     "nodemailer": "^8.0.7",
+    "razorpay": "^2.9.6",
     "typescript": "^6.0.3",
     "zod": "^4.4.1"
   },

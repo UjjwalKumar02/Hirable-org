@@ -1,6 +1,6 @@
 interface InputProps {
   size: "sm" | "md" | "lg";
-  type: "text" | "email" | "password";
+  type: "text" | "number" | "email" | "password" | "boolean";
   title?: string;
   placeholder?: string;
   className?: string;
