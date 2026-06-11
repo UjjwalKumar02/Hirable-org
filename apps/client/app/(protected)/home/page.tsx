@@ -1,24 +1,28 @@
 "use client";
 
-import { useRouter } from "next/navigation";
 import { API_BASE_URL } from "../../../config";
 import Button from "../../../components/Button";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { api } from "../../../lib/api";
-
-interface User {
-  id: string;
-  email: string;
-  username: string;
-  avatar: string | null;
-  accountType: string;
-}
+import { Form } from "../../../types/form.type";
+import { UserContext } from "../../../context/userContext";
+import Navbar from "../../../components/Navbar";
+import CreateFormPopup from "./_components/CreateFormPopup";
+import Sidebar from "../../../components/Sidebar";
+import FormCard from "./_components/FormCard";
+import { AddIcon } from "../../../icons/AddIcon";
 
 export default function Home() {
-  const router = useRouter();
-  const [user, setUser] = useState<User | null>(null);
+  const [formList, setFormList] = useState<Form[]>([]);
+  const [createFormPopup, setCreateFormPopup] = useState(false);
 
-  const fetchAllUser = async () => {
+  const context = useContext(UserContext);
+  if (!context) {
+    return <>Loading...</>;
+  }
+
+  // Fetch user details
+  const fetchUserDetails = async () => {
     try {
       const res = await api(`${API_BASE_URL}/auth/me`);
 
@@ -28,22 +32,25 @@ export default function Home() {
       }
 
       const jsonData = await res.json();
-      setUser(jsonData);
-    } catch (error: any) {
-      alert(error.message);
+      // context.setUser(jsonData.user);
+
+      localStorage.setItem("username", jsonData.user.username);
+      localStorage.setItem("credits", jsonData.user.creditBalance);
+
+      context.setUser({
+        username: jsonData.user.username,
+        creditBalance: jsonData.user.creditBalance,
+      });
+    } catch (error) {
+      alert("Internal server error");
     }
   };
 
-  useEffect(() => {
-    fetchAllUser();
-  }, []);
-
-  // Logout handler
-  const handleLogout = async () => {
+  // Fetch user forms
+  const fetchUserForms = async () => {
     try {
-      const res = await fetch(`${API_BASE_URL}/auth/logout`, {
-        method: "POST",
-        credentials: "include",
+      const res = await api(`${API_BASE_URL}/form/bulk`, {
+        method: "GET",
       });
 
       if (!res.ok) {
@@ -51,19 +58,68 @@ export default function Home() {
         return;
       }
 
-      router.push("/");
-    } catch (error: any) {
-      alert(error.message);
+      const jsonData = await res.json();
+      setFormList(jsonData.forms);
+    } catch (error) {
+      alert("Internal server error");
     }
   };
 
+  useEffect(() => {
+    fetchUserDetails();
+    fetchUserForms();
+  }, []);
+
   return (
-    <div className="min-h-screen flex flex-col justify-center items-center gap-5">
-      Welcome!
-      <Button variant="primary" size="md" onClick={handleLogout}>
-        Logout
-      </Button>
-      <div>{user ? <div>{user.email}</div> : <p>User is empty!</p>}</div>
+    <div className="flex text-md tracking-tight">
+      {/* Sidebar */}
+      <Sidebar />
+
+      {/* Main Content */}
+      <div className="w-full flex flex-col">
+        {/* Nav */}
+        <Navbar pageTitle="Home" />
+
+        {/* Content */}
+        <div className="min-h-screen flex justify-center">
+          <div className="min-w-4xl max-w-4xl ">
+            {/* Header */}
+            <div className="w-full flex items-center justify-between mt-8">
+              <h2 className="font-medium text-lg">Your forms</h2>
+
+              <Button
+                variant="primary"
+                size="md"
+                onClick={() => setCreateFormPopup(true)}
+                className="flex items-center gap-1.5"
+              >
+                <AddIcon /> Create form
+              </Button>
+            </div>
+
+            {/* Forms list */}
+            <div className="flex flex-col gap-4 mt-5">
+              {formList.length > 0 &&
+                formList.map((f, i) => (
+                  <FormCard
+                    key={i}
+                    slug={f.slug}
+                    title={f.title}
+                    description={f.description}
+                    isPublished={f.isPublished}
+                  />
+                ))}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {createFormPopup && (
+        <CreateFormPopup
+          setCreateFormPopup={setCreateFormPopup}
+          setFormList={setFormList}
+        />
+      )}
     </div>
   );
 }

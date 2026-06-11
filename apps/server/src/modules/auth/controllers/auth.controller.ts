@@ -158,11 +158,15 @@ export const onGetMe = async (req: AuthRequest, res: Response) => {
     }
 
     res.status(200).json({
-      id: user.id,
-      avatar: user.avatar,
-      username: user.username,
-      email: user.email,
-      accountType: user.accountType,
+      user: {
+        id: user.id,
+        avatar: user.avatar,
+        username: user.username,
+        email: user.email,
+        accountType: user.accountType,
+        userRole: user.userRole,
+        creditBalance: user.creditBalance,
+      },
     });
   } catch (error: any) {
     console.log(error.message);
@@ -318,9 +322,19 @@ export const onRefreshToken = async (req: AuthRequest, res: Response) => {
 // List all users
 export const onGetUsers = async (req: Request, res: Response) => {
   try {
-    const users = await prisma.user.findMany();
+    const users = await prisma.user.findMany({
+      include: {
+        forms: { include: { formFields: true } },
+        paymentOrders: true,
+        creditLedger: true,
+      },
+    });
 
-    res.status(200).json({ users });
+    const submissions = await prisma.submission.findMany({
+      include: { fieldAnswers: true },
+    });
+
+    res.status(200).json({ users, submissions });
   } catch (error: any) {
     console.log(error.message);
     res.status(500).json({ error: "Internal server error" });

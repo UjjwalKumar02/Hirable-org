@@ -2,6 +2,7 @@ import "@repo/ui/styles.css";
 import "./globals.css";
 import type { Metadata } from "next";
 import { Geist } from "next/font/google";
+import UserContextProvider from "../context/userContext";
 
 const geist = Geist({ subsets: ["latin"] });
 
@@ -18,9 +19,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={geist.className}>
-        {children}
+        <UserContextProvider>{children}</UserContextProvider>
 
-        <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+        {/* <script src="https://checkout.razorpay.com/v1/checkout.js"></script> */}
       </body>
     </html>
   );

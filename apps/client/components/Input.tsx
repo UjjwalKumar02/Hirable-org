@@ -5,7 +5,11 @@ interface InputProps {
   placeholder?: string;
   className?: string;
   reference?: React.Ref<HTMLInputElement>;
+  defaultValue?: string;
+  readonly?: boolean;
+  required?: boolean;
   maxLength?: number;
+  onChange?: React.ChangeEventHandler<HTMLInputElement>;
 }
 
 export default function Input(props: InputProps) {
@@ -22,13 +26,23 @@ export default function Input(props: InputProps) {
     <div
       className={`${props.className} flex flex-col ${sizeStyles[props.size]}`}
     >
-      <label htmlFor="">{props.title}</label>
+      <label>{props.title}</label>
       <input
         ref={props.reference}
         type={props.type}
         placeholder={props.placeholder}
         className={defaultStyles}
-        maxLength={props.maxLength}
+        readOnly={props.readonly}
+        defaultValue={props.defaultValue}
+        required={props.required}
+        maxLength={
+          props.maxLength === null ||
+          props.maxLength === undefined ||
+          props.maxLength === 0
+            ? 10000
+            : props.maxLength
+        }
+        onChange={props.onChange}
       />
     </div>
   );
