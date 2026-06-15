@@ -1,6 +1,6 @@
 # Hirable
 
-A saas platform featuring a custom form builder, centralized response management, and AI-powered analytics over response data.
+A web app that enables users to create custom forms, manage responses through a centralized dashboard, and leverage AI-powered analytics to generate actionable insights from collected data.
 
 ![landing](./apps/client/public/landingImage.png)
 
@@ -9,13 +9,11 @@ A saas platform featuring a custom form builder, centralized response management
 - Role-Based Access Control (RBAC)
 - JWT authentication with access & refresh tokens
 - Asynchronous email service
-- Razorpay payment integration
-- Credit system with ledger tracking
-- Dynamic form builder
+- Razorpay integration & Credit based system
+- Custom Form builder
 - RAG-powered querying of form responses
-- Independent embedding service
+- Asynchronous embedding service
 - Clean and responsive UI/UX
-- API rate limiting
 
 ### Tech stack:
 
@@ -33,10 +31,8 @@ A saas platform featuring a custom form builder, centralized response management
 
 - Deploy (priority)
 - Rate limiting
-- Form context and dynamic sidebar
 - Search using submission id
 - Credit ledger page in FE
-- Admin bypass issue
 - Responsive UI
 
 ### Limitation:

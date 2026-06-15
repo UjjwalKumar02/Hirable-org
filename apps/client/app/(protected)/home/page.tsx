@@ -11,14 +11,17 @@ import CreateFormPopup from "./_components/CreateFormPopup";
 import Sidebar from "../../../components/Sidebar";
 import FormCard from "./_components/FormCard";
 import { AddIcon } from "../../../icons/AddIcon";
+import { FormsContext } from "../../../context/formsContext";
 
 export default function Home() {
-  const [formList, setFormList] = useState<Form[]>([]);
+  // const [formList, setFormList] = useState<Form[]>([]);
   const [createFormPopup, setCreateFormPopup] = useState(false);
 
-  const context = useContext(UserContext);
-  if (!context) {
-    return <>Loading...</>;
+  const userContext = useContext(UserContext);
+  const formsContext = useContext(FormsContext);
+
+  if (!userContext || !formsContext) {
+    return <>Loading context...</>;
   }
 
   // Fetch user details
@@ -37,7 +40,7 @@ export default function Home() {
       localStorage.setItem("username", jsonData.user.username);
       localStorage.setItem("credits", jsonData.user.creditBalance);
 
-      context.setUser({
+      userContext.setUser({
         username: jsonData.user.username,
         creditBalance: jsonData.user.creditBalance,
       });
@@ -59,7 +62,10 @@ export default function Home() {
       }
 
       const jsonData = await res.json();
-      setFormList(jsonData.forms);
+      // setFormList(jsonData.forms);
+
+      localStorage.setItem("forms", JSON.stringify(jsonData.forms));
+      formsContext.setForms(jsonData.forms);
     } catch (error) {
       alert("Internal server error");
     }
@@ -69,6 +75,8 @@ export default function Home() {
     fetchUserDetails();
     fetchUserForms();
   }, []);
+
+  
 
   return (
     <div className="flex text-md tracking-tight">
@@ -99,8 +107,8 @@ export default function Home() {
 
             {/* Forms list */}
             <div className="flex flex-col gap-4 mt-5">
-              {formList.length > 0 &&
-                formList.map((f, i) => (
+              {formsContext.forms.length > 0 &&
+                formsContext.forms.map((f, i) => (
                   <FormCard
                     key={i}
                     slug={f.slug}
@@ -118,7 +126,6 @@ export default function Home() {
       {createFormPopup && (
         <CreateFormPopup
           setCreateFormPopup={setCreateFormPopup}
-          setFormList={setFormList}
         />
       )}
     </div>

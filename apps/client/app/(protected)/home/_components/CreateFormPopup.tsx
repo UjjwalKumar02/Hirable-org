@@ -1,21 +1,27 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useContext, useRef, useState } from "react";
 import Input from "../../../../components/Input";
 import Button from "../../../../components/Button";
 import { API_BASE_URL } from "../../../../config";
 import { api } from "../../../../lib/api";
-import { Form } from "../../../../types/form.type";
+// import { Form } from "../../../../types/form.type";
+import { FormsContext } from "../../../../context/formsContext";
 
 interface CreateFormPopupProps {
   setCreateFormPopup: React.Dispatch<React.SetStateAction<boolean>>;
-  setFormList: React.Dispatch<React.SetStateAction<Form[]>>;
+  // setFormList: React.Dispatch<React.SetStateAction<Form[]>>;
 }
 
 export default function CreateFormPopup(props: CreateFormPopupProps) {
   const titleRef = useRef<HTMLInputElement | null>(null);
   const descriptionRef = useRef<HTMLInputElement | null>(null);
   const [loading, setLoading] = useState(false);
+
+  const formsContext = useContext(FormsContext);
+  if (!formsContext) {
+    return <>Loading context...</>;
+  }
 
   // Create credit package handler
   const handleCreate = async () => {
@@ -54,7 +60,7 @@ export default function CreateFormPopup(props: CreateFormPopupProps) {
       }
 
       const jsonData = await res.json();
-      props.setFormList((prev) => [jsonData.form, ...prev]);
+      formsContext.setForms((prev) => [jsonData.form, ...prev]);
       props.setCreateFormPopup(false);
     } catch (error) {
       alert("Server is not responding!");

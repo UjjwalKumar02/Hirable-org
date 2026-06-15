@@ -8,8 +8,16 @@ import { LogoutIcon } from "../icons/LogoutIcon";
 import Button from "./Button";
 import { API_BASE_URL } from "../config";
 import { useRouter } from "next/navigation";
+import { useContext } from "react";
+import { FormsContext } from "../context/formsContext";
+import Link from "next/link";
+import FormIcon from "../icons/FormIcon";
+import DesignIcon from "../icons/DesignIcon";
+import DashboardIcon from "../icons/DashboardIcon";
+import QueryIcon from "../icons/QueryIcon";
 
 export default function Sidebar() {
+  const formsContext = useContext(FormsContext);
   const router = useRouter();
 
   // Logout handler
@@ -55,6 +63,48 @@ export default function Sidebar() {
           <HomeIcon />
           <p>Home</p>
         </div>
+
+        {formsContext &&
+          formsContext.forms &&
+          formsContext.forms.length > 0 &&
+          formsContext.forms.map((fs, i) => (
+            <div key={i} className="space-y-2">
+              <div
+                onClick={() => console.log("Navigating...")}
+                className="flex items-center gap-1.5 cursor-pointer"
+              >
+                <FormIcon />
+                <p>{fs.title}</p>
+              </div>
+              <Link href={`http://localhost:3001/form/${fs.slug}/design`}>
+                <div
+                  onClick={() => console.log("Navigating...")}
+                  className="flex items-center gap-1.5 cursor-pointer pl-3"
+                >
+                  <DesignIcon />
+                  <p>Design</p>
+                </div>
+              </Link>
+              <Link href={`http://localhost:3001/form/${fs.slug}/dashboard`}>
+                <div
+                  onClick={() => console.log("Navigating...")}
+                  className="flex items-center gap-1.5 cursor-pointer pl-3"
+                >
+                  <DashboardIcon />
+                  <p>Dashboard</p>
+                </div>
+              </Link>
+              <Link href={`http://localhost:3001/form/${fs.slug}/query`}>
+                <div
+                  onClick={() => console.log("Navigating...")}
+                  className="flex items-center gap-1.5 cursor-pointer pl-3"
+                >
+                  <QueryIcon />
+                  <p>Query</p>
+                </div>
+              </Link>
+            </div>
+          ))}
 
         <div
           onClick={() => router.push("/credits")}

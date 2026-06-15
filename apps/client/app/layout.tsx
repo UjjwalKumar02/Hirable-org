@@ -3,6 +3,7 @@ import "./globals.css";
 import type { Metadata } from "next";
 import { Geist } from "next/font/google";
 import UserContextProvider from "../context/userContext";
+import FormsContextProvider from "../context/formsContext";
 
 const geist = Geist({ subsets: ["latin"] });
 
@@ -19,7 +20,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={geist.className}>
-        <UserContextProvider>{children}</UserContextProvider>
+        <FormsContextProvider>
+          <UserContextProvider>{children}</UserContextProvider>
+        </FormsContextProvider>
 
         <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
       </body>

@@ -31,6 +31,7 @@ export const generateEmbedding = async (text: string) => {
 export const LLMResponseSchema = z.array(
   z.object({
     submissionId: z.string(),
+    document: z.string().min(2),
     reasoning: z.string().min(2).max(500),
   }),
 );

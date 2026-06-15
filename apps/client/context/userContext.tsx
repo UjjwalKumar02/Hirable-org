@@ -35,7 +35,7 @@ export default function UserContextProvider({
       });
     }
 
-    console.log("Local updation to context...", {
+    console.log("Local updation to user context...", {
       username: localStorage.getItem("username")!,
       creditBalance: Number(localStorage.getItem("credits")),
     });

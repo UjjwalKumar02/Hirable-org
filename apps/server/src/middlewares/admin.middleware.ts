@@ -8,8 +8,8 @@ export const adminMiddleware = async (
 ) => {
   try {
     const userRole = req.userRole;
-    if (!userRole || userRole !== "ADMIN") {
-      res.status(200).json({ error: "Unathorized" });
+    if (!userRole || userRole === null || userRole !== "ADMIN") {
+      res.status(403).json({ error: "Unathorized" });
       return;
     }
 
