@@ -27,7 +27,7 @@ A saas platform featuring a custom form builder, centralized response management
 
 ### Demo:
 
-[Demo-video](./apps/client/public/demo.mp4)
+[Demo-video](./apps/client/public/app_demo.mp4)
 
 ### Things needed to do:
 
@@ -35,6 +35,9 @@ A saas platform featuring a custom form builder, centralized response management
 - Rate limiting
 - Form context and dynamic sidebar
 - Search using submission id
+- Credit ledger page in FE
+- Admin bypass issue
+- Responsive UI
 
 ### Limitation:
 
