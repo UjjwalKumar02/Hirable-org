@@ -90,8 +90,9 @@ model Form {
   publishedLink String?
   responseLimit Int?
 
-  formFields  FormField[]
-  submissions Submission[]
+  formFields         FormField[]
+  submissions        Submission[]
+  responseEmbeddings ResponseEmbedding[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now())
@@ -130,7 +131,28 @@ model Submission {
   fieldAnswers FieldAnswer[]
   formId       String
   form         Form          @relation(fields: [formId], references: [id], onDelete: Cascade)
-  createdAt    DateTime      @default(now())
+
+  responseEmbedding ResponseEmbedding?
+
+  createdAt DateTime @default(now())
+}
+
+model ResponseEmbedding {
+  id           String     @id @default(uuid())
+  formId       String
+  form         Form       @relation(references: [id], fields: [formId], onDelete: Cascade)
+  submissionId String     @unique
+  submission   Submission @relation(fields: [submissionId], references: [id], onDelete: Cascade)
+
+  document  String?                @db.Text
+  embedding Unsupported("vector")?
+  // embedding Unsupported("vector(3072)")?
+  status    EmbeddingStatus        @default(PENDING)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([formId])
 }
 
 enum AccountType {
@@ -151,7 +173,9 @@ enum PaymentStatus {
 
 enum CreditTransactionType {
   PURCHASE
+  RESERVE
   USAGE
+  REFUND
 }
 
 enum FormFieldType {
@@ -163,4 +187,10 @@ enum FormFieldType {
   // DATE
   // CHECKBOX
   // RADIO
+}
+
+enum EmbeddingStatus {
+  PENDING
+  COMPLETED
+  FAILED
 }

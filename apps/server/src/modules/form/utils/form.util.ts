@@ -16,3 +16,25 @@ export const generateSlug = (str: string) => {
 
   return slug;
 };
+
+export const generateDocument = (props: {
+  formFields: {
+    id: string;
+    label: string;
+  }[];
+  fieldAnswers: {
+    formFieldId: string;
+    value: string;
+  }[];
+}) => {
+  const fieldLabelMap = new Map(props.formFields.map((f) => [f.id, f.label]));
+
+  let document = "";
+
+  for (let itr of props.fieldAnswers) {
+    document += `${fieldLabelMap.get(itr.formFieldId)} : ${itr.value}`;
+    document += "\n";
+  }
+
+  return document;
+};

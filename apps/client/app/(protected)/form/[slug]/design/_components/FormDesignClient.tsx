@@ -21,7 +21,7 @@ export default function FormDesignClient({ slug }: { slug: string }) {
   const [formTitle, setFormTitle] = useState("");
   const [formDesc, setFormDesc] = useState("");
   const [fieldList, setFieldList] = useState<FormField[]>([]);
-  const [fetchLoading, setFetchLoading] = useState(false);
+  const [fetchLoading, setFetchLoading] = useState(true);
   const [updateLoading, setUpdateLoading] = useState(false);
   const [currentEditFieldIndex, setCurrentEditFieldIndex] = useState<
     number | null
@@ -58,16 +58,13 @@ export default function FormDesignClient({ slug }: { slug: string }) {
     fetchFormDetails();
   }, []);
 
+  // Remove later
   useEffect(() => {
     console.log(fieldList);
   }, [fieldList]);
 
   // Save form handler
   const handleSaveForm = async () => {
-    // get field list and title and description
-    // make request
-    // match the backend and frontend and db types
-
     if (formTitle === "" || formDesc === "") {
       alert("Form title and description are required!");
       return;

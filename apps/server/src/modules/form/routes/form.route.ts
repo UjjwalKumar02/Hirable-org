@@ -6,6 +6,7 @@ import {
   onGetForm,
   onGetFormSubmissions,
   onGetUserForms,
+  onLLMQuery,
   onSubmitForm,
   onTogglePublishForm,
   onUpdateForm,
@@ -23,5 +24,8 @@ formRouter.get("/:slug/submissions", authMiddleware, onGetFormSubmissions);
 // public routes
 formRouter.get("/:slug/details", onGetForm);
 formRouter.post("/:slug/submit", onSubmitForm);
+
+// query using llm
+formRouter.post("/:slug/llm-query", authMiddleware, onLLMQuery);
 
 export default formRouter;

@@ -7,7 +7,8 @@
     "build": "npx tsc -b",
     "start": "node ./dist/server.js",
     "dev": "pnpm build && pnpm start",
-    "dev:email-worker": "node ./dist/workers/email.worker.js"
+    "dev:email-worker": "node ./dist/workers/email.worker.js",
+    "dev:embedding-worker": "node ./dist/workers/embedding.worker.js"
   },
   "type": "module",
   "keywords": [],
@@ -15,6 +16,7 @@
   "license": "ISC",
   "packageManager": "pnpm@10.19.0",
   "dependencies": {
+    "@google/genai": "^2.8.0",
     "bcrypt": "^6.0.0",
     "bullmq": "^5.76.5",
     "cookie-parser": "^1.4.7",

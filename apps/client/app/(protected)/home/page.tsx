@@ -107,6 +107,7 @@ export default function Home() {
                     title={f.title}
                     description={f.description}
                     isPublished={f.isPublished}
+                    createdAt={f.createdAt}
                   />
                 ))}
             </div>

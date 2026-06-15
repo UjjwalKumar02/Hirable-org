@@ -5,7 +5,7 @@ export const enqueueEmail = async (data: {
   emailType: "verify-email" | "credit-purchase" | "form-limit" | "rate-limit";
   payload: any;
 }) => {
-  console.log("Adding job in queue", data);
+  console.log("Adding job in email queue", data);
 
   await emailQueue.add("send_email", data, {
     delay: 2000,

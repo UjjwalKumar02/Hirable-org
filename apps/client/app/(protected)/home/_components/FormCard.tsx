@@ -2,12 +2,14 @@
 
 import Button from "../../../../components/Button";
 import Link from "next/link";
+import formatDate from "../../../../lib/helpers/formatDate";
 
 interface FormCardProps {
   slug: string;
   title: string;
   description: string;
   isPublished: boolean;
+  createdAt: Date;
 }
 
 export default function FormCard(props: FormCardProps) {
@@ -52,7 +54,9 @@ export default function FormCard(props: FormCardProps) {
       <div className="flex justify-between items-end gap-8">
         <p>{props.description}</p>
 
-        <p className="text-sm text-right text-gray-800 min-w-20">20 Jan 2026</p>
+        <p className="text-sm text-right text-gray-800 min-w-20">
+          {formatDate(new Date(props.createdAt))}
+        </p>
       </div>
     </div>
   );

@@ -27,3 +27,7 @@ export const SubmitFormDTO = z.object({
     }),
   ),
 });
+
+export const LLMQueryDTO = z.object({
+  query: z.string().min(3),
+});

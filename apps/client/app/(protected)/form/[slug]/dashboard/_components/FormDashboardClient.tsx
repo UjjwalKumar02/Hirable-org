@@ -13,11 +13,13 @@ import { ToggleIcon } from "../../../../../../icons/ToggleIcon";
 import QueryIcon from "../../../../../../icons/QueryIcon";
 import { DeleteIcon } from "../../../../../../icons/DeleteIcon";
 import CopyIcon from "../../../../../../icons/CopyIcon";
+import formatDate from "../../../../../../lib/helpers/formatDate";
+import Link from "next/link";
 
 export default function FormDashboardClient({ slug }: { slug: string }) {
   const [formDetails, setFormDetails] = useState<Form | null>(null);
   const [submissions, setSubmissions] = useState<Submission[]>([]);
-  const [initialLoading, setInitialLoading] = useState(false);
+  const [initialLoading, setInitialLoading] = useState(true);
   const [publishLoading, setPublishLoading] = useState(false);
   const [deleteLoading, setDeleteLoading] = useState(false);
   const [isPublished, setIsPublished] = useState(false);
@@ -147,7 +149,7 @@ export default function FormDashboardClient({ slug }: { slug: string }) {
 
         {/* Content */}
         <div className="min-h-screen flex justify-center">
-          <div className="min-w-4xl max-w-4xl ">
+          <div className="min-w-5xl max-w-5xl ">
             {/* Header */}
             <div className="w-full flex items-center justify-between mt-8">
               <h2 className="font-medium text-lg">
@@ -165,14 +167,16 @@ export default function FormDashboardClient({ slug }: { slug: string }) {
                   <ToggleIcon /> Toggle Publish
                 </Button>
 
-                <Button
-                  variant="secondary"
-                  size="md"
-                  onClick={() => alert("Coming soon...")}
-                  className="flex items-center gap-1.5"
-                >
-                  <QueryIcon /> Query using LLM
-                </Button>
+                <Link href={`http://localhost:3001/form/${slug}/query`}>
+                  <Button
+                    variant="secondary"
+                    size="md"
+                    onClick={() => console.log("Navigating..")}
+                    className="flex items-center gap-1.5"
+                  >
+                    <QueryIcon /> Query using LLM
+                  </Button>
+                </Link>
 
                 <Button
                   variant="secondary"
@@ -215,61 +219,63 @@ export default function FormDashboardClient({ slug }: { slug: string }) {
                   </Button>
                 ) : (
                   <p>
-                    {new Date(
-                      formDetails?.updatedAt ?? Date.now(),
-                    ).toLocaleString("en-IN", {
-                      year: "numeric",
-                      month: "short",
-                      day: "numeric",
-                    }) ?? "Error"}
+                    {formatDate(
+                      new Date(formDetails?.updatedAt ?? Date.now()),
+                    ) ?? "Error"}
                   </p>
                 )}
               </div>
             </div>
 
             {/* Response table */}
-            <div className="mt-5 flex flex-col gap-5 bg-white border border-gray-200 shadow-xs rounded-md p-10">
+            <div className="mt-5 flex flex-col gap-5 bg-white border border-gray-200 shadow-xs rounded-md p-8">
               <h1 className="text-lg font-medium pl-1">Responses</h1>
 
               {/* X scroll */}
               <div className="overflow-x-auto">
-                <table className="w-full border-collapse  border border-gray-200">
-                  {/* Column names */}
-                  <thead className=" border-b border-gray-200">
-                    <tr className="">
-                      <th className="px-4 py-2 font-medium">#</th>
-                      {formDetails !== null &&
-                        formDetails.formFields.length > 0 &&
-                        formDetails.formFields.map((f, index) => (
+                {formDetails === null || formDetails.formFields.length === 0 ? (
+                  <p>Error</p>
+                ) : (
+                  <table className="w-full border-collapse  border border-gray-200">
+                    {/* Column names */}
+                    <thead className=" border-b border-gray-200">
+                      <tr>
+                        <th className="px-4 py-2 font-medium">#</th>
+                        {formDetails.formFields.map((f, index) => (
                           <th key={index} className="px-4 py-2 font-medium">
                             {f.label}
                           </th>
                         ))}
-                    </tr>
-                  </thead>
-
-                  {/* Answers */}
-                  <tbody className="text-center">
-                    {submissions.length === 0 ? (
-                      <tr className="px-4 py-2">
-                        <td className="px-4 py-2"></td>
-                        <td className="px-4 py-2">No responses yet!</td>
-                        <td className="px-4 py-2"></td>
                       </tr>
-                    ) : (
-                      submissions.map((s, index) => (
-                        <tr key={index} className="px-4 py-2">
-                          <td className="px-4 py-2">{index + 1}</td>
-                          {s.fieldAnswers.map((a, i) => (
-                            <td className="px-4 py-2" key={i}>
-                              {a.value ?? "-"}
-                            </td>
-                          ))}
+                    </thead>
+
+                    {/* Answers */}
+                    <tbody className="text-center">
+                      {submissions.length === 0 ? (
+                        <tr className="px-4 py-2">
+                          <td className="px-4 py-2">No responses yet!</td>
                         </tr>
-                      ))
-                    )}
-                  </tbody>
-                </table>
+                      ) : (
+                        submissions.map((s, index) => {
+                          const answerMap = new Map(
+                            s.fieldAnswers.map((a) => [a.formFieldId, a.value]),
+                          );
+                          return (
+                            <tr key={index} className="px-4 py-2">
+                              <td className="px-4 py-2">{index + 1}</td>
+
+                              {formDetails.formFields.map((field, idx) => (
+                                <td key={idx} className="px-4 py-2">
+                                  {answerMap.get(field.id) ?? null}
+                                </td>
+                              ))}
+                            </tr>
+                          );
+                        })
+                      )}
+                    </tbody>
+                  </table>
+                )}
               </div>
             </div>
           </div>

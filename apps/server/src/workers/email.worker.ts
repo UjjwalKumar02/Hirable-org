@@ -8,13 +8,12 @@ const worker = new Worker(
   async (job: Job) => {
     const { to, emailType, payload } = job.data;
 
+    console.log("Sending email from worker...");
     console.log(to, emailType, payload);
 
     try {
       if (emailType === "verify-email") {
         const OTP = payload.OTP;
-
-        console.log("Sending email from worker...");
 
         await sendEmail({
           to,
@@ -23,8 +22,6 @@ const worker = new Worker(
         });
       } else if (emailType === "credit-purchase") {
         const credits = payload.credits;
-
-        console.log("Sending email from worker...");
 
         await sendEmail({
           to,

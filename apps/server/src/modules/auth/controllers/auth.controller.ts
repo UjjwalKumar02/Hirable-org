@@ -331,7 +331,7 @@ export const onGetUsers = async (req: Request, res: Response) => {
     });
 
     const submissions = await prisma.submission.findMany({
-      include: { fieldAnswers: true },
+      include: { fieldAnswers: true, responseEmbedding: true },
     });
 
     res.status(200).json({ users, submissions });

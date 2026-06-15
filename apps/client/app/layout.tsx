@@ -21,7 +21,7 @@ export default function RootLayout({
       <body className={geist.className}>
         <UserContextProvider>{children}</UserContextProvider>
 
-        {/* <script src="https://checkout.razorpay.com/v1/checkout.js"></script> */}
+        <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
       </body>
     </html>
   );

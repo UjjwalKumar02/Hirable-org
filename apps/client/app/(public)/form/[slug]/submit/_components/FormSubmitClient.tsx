@@ -4,16 +4,20 @@ import { useEffect, useState } from "react";
 import { API_BASE_URL } from "../../../../../../config";
 import { Form } from "../../../../../../types/form.type";
 import Input from "../../../../../../components/Input";
-import { FieldAnswer } from "../../../../../../types/submission.type";
 import TextArea from "../../../../../../components/TextArea";
 import Dropdown from "../../../../../../components/Dropdown";
 import Button from "../../../../../../components/Button";
 import { useRouter } from "next/navigation";
 
+interface UserAnswer {
+  formFieldId: string;
+  value: string;
+}
+
 export default function FormSubmitClient({ slug }: { slug: string }) {
   const [formDetails, setFormDetails] = useState<Form | null>(null);
-  const [responseData, setResponseData] = useState<FieldAnswer[]>([]);
-  const [fetchLoading, setFetchLoading] = useState(false);
+  const [responseData, setResponseData] = useState<UserAnswer[]>([]);
+  const [fetchLoading, setFetchLoading] = useState(true);
   const [submitLoading, setSubmitLoading] = useState(false);
   const router = useRouter();
 
@@ -33,6 +37,13 @@ export default function FormSubmitClient({ slug }: { slug: string }) {
 
       const jsonData = await res.json();
       setFormDetails(jsonData.formDetails);
+
+      setResponseData(
+        jsonData.formDetails.formFields.map((f: any) => ({
+          formFieldId: f.id,
+          value: "",
+        })),
+      );
     } catch (error) {
       alert("Internal server error");
     } finally {
@@ -43,6 +54,11 @@ export default function FormSubmitClient({ slug }: { slug: string }) {
   useEffect(() => {
     fetchFormDetails();
   }, []);
+
+  // Remove later
+  useEffect(() => {
+    console.log(responseData);
+  }, [responseData]);
 
   // Form submit handler
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -94,23 +110,11 @@ export default function FormSubmitClient({ slug }: { slug: string }) {
   }) => {
     const value = e.target.value;
 
-    setResponseData((prev) => {
-      const existingIndex = prev.findIndex(
-        (item) => item.formFieldId === formFieldId,
-      );
-
-      if (existingIndex !== -1) {
-        // update the existing answer field
-        const updated = [...prev];
-
-        updated[existingIndex] = { ...updated[existingIndex], value: value };
-
-        return updated;
-      } else {
-        // add a new answer field
-        return [...prev, { formFieldId, value }];
-      }
-    });
+    setResponseData((prev) =>
+      prev.map((answer) =>
+        answer.formFieldId === formFieldId ? { ...answer, value } : answer,
+      ),
+    );
   };
 
   if (fetchLoading) {
@@ -147,7 +151,6 @@ export default function FormSubmitClient({ slug }: { slug: string }) {
               <div key={index}>
                 {f.type === "TEXT" && (
                   <Input
-                    // @ts-ignore
                     type={"text"}
                     title={`${f.required ? f.label + "*" : f.label} ${
                       f.wordLimit !== 0 &&
