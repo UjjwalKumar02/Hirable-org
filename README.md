@@ -1,26 +1,25 @@
 # Hirable
 
-A web app that enables users to create custom forms, manage responses through a centralized dashboard, and leverage AI-powered analytics to generate actionable insights from collected data.
+A web app that lets users create custom forms, manage responses from a centralized dashboard, and use AI-powered analytics to extract actionable insights from collected data.
 
 ![landing](./apps/client/public/landingImage.png)
 
 ### Features:
 
-- Role-Based Access Control (RBAC)
-- JWT authentication with access & refresh tokens
-- Asynchronous email service
-- Razorpay integration & Credit based system
+- Role-Based Access Control (RBAC) with JWT authentication
 - Custom Form builder
+- Asynchronous email and embedding services
 - RAG-powered querying of form responses
-- Asynchronous embedding service
-- Clean and responsive UI/UX
+- Razorpay integration with a credit-based system
+- Clean and responsive UI
 
 ### Tech stack:
 
 - **Frontend:** Next.js, TypeScript, Tailwind CSS, React Context
-- **Backend:** Express.js, Prisma, Zod, Nodemailer
+- **Backend:** Express.js, Prisma, Zod, Nodemailer, ioredis, @google/genai
 - **Database:** PostgreSQL, pgvector
 - **Infrastructure:** Redis, BullMQ, Docker
+- **LLM API:** Gemini
 - **Payments:** Razorpay
 
 ### Demo:
@@ -31,15 +30,13 @@ A web app that enables users to create custom forms, manage responses through a 
 
 - Deploy (priority)
 - Rate limiting
-- Search using submission id
-- Credit ledger page in FE
 - Responsive UI
 
 ### Limitation:
 
 - Embedding model should be same for prevention of vector length mismatch
 
-#### Steps to add pgvector to postgres:
+<!-- #### Steps to add pgvector to postgres:
 
 ```bash
 docker exec -it <container-name> psql -U postgres -d app_pg
@@ -48,4 +45,4 @@ CREATE EXTENSION IF NOT EXISTS vector;
 SELECT extname FROM pg_extension;
 # For table description
 \d "<table-name>"
-```
+``` -->

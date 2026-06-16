@@ -55,7 +55,7 @@ export default function Sidebar() {
       </div>
 
       {/* List of links */}
-      <div className="flex flex-col gap-4 pl-5 mt-7">
+      <div className="flex flex-col gap-3 pl-5 mt-7">
         <div
           onClick={() => router.push("/home")}
           className="flex items-center gap-1.5 cursor-pointer"
@@ -68,7 +68,7 @@ export default function Sidebar() {
           formsContext.forms &&
           formsContext.forms.length > 0 &&
           formsContext.forms.map((fs, i) => (
-            <div key={i} className="space-y-2">
+            <div key={i} className="space-y-1">
               <div
                 onClick={() => console.log("Navigating...")}
                 className="flex items-center gap-1.5 cursor-pointer"
@@ -112,6 +112,14 @@ export default function Sidebar() {
         >
           <CreditIcon />
           <p>Buy Credits</p>
+        </div>
+
+        <div
+          onClick={() => router.push("/ledger")}
+          className="flex items-center gap-1.5 cursor-pointer"
+        >
+          <DashboardIcon />
+          <p>Ledger</p>
         </div>
 
         <div

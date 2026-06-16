@@ -33,12 +33,12 @@ export default function UserContextProvider({
         username: localStorage.getItem("username")!,
         creditBalance: Number(localStorage.getItem("credits")),
       });
-    }
 
-    console.log("Local updation to user context...", {
-      username: localStorage.getItem("username")!,
-      creditBalance: Number(localStorage.getItem("credits")),
-    });
+      console.log("Local updation to user context...", {
+        username: localStorage.getItem("username")!,
+        creditBalance: Number(localStorage.getItem("credits")),
+      });
+    }
   }, []);
 
   return (

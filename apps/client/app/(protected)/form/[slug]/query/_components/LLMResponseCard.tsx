@@ -21,8 +21,8 @@ export default function LLMResponseCard(props: Chat) {
               className="w-full flex flex-col gap-2 p-2 border border-gray-200 rounded-md"
             >
               {/* <p>{l.submissionId}</p> */}
-              <p>{l.document}</p>
               <p>{l.reasoning}</p>
+              <p>{l.document}</p>
             </div>
           ))}
       </div>
