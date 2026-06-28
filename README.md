@@ -1,6 +1,6 @@
 # Hirable
 
-A web app that lets users create custom forms, manage responses from a centralized dashboard, and use AI-powered analytics to extract actionable insights from collected data.
+A form management platform that enables users to create custom forms, manage responses from a centralized dashboard, and leverage AI-powered analytics to extract actionable insights from collected data.
 
 ![landing](./apps/client/public/landingImage.png)
 
@@ -13,28 +13,29 @@ A web app that lets users create custom forms, manage responses from a centraliz
 - Razorpay integration with a credit-based system
 - Clean and responsive UI
 
-### Tech stack:
+### Tech Stack
 
-- **Frontend:** Next.js, TypeScript, Tailwind CSS, React Context
+- **Frontend:** Next.js, TypeScript, Tailwind CSS, React Context API
 - **Backend:** Express.js, Prisma, Zod, Nodemailer, ioredis, @google/genai
-- **Database:** PostgreSQL, pgvector
-- **Infrastructure:** Redis, BullMQ, Docker
+- **Database:** PostgreSQL + pgvector
+- **Message Queue:** Upstash Redis
 - **LLM API:** Gemini
 - **Payments:** Razorpay
+- **Deployment:** Vercel & Render
 
 ### Demo:
 
 [Demo-video](./apps/client/public/app_demo.mp4)
 
-### Things needed to do:
+<!-- ### Things needed to do:
 
 - Deploy (priority)
 - Rate limiting
-- Responsive UI
+- Responsive UI -->
 
-### Limitation:
+<!-- ### Limitation:
 
-- Embedding model should be same for prevention of vector length mismatch
+- Embedding model should be same for prevention of vector length mismatch -->
 
 <!-- #### Steps to add pgvector to postgres:
 

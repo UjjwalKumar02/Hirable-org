@@ -23,6 +23,6 @@ authRouter.get("/me", authMiddleware, onGetMe);
 authRouter.post("/refresh-token", refreshTokenMiddleware, onRefreshToken);
 
 // Remove later
-authRouter.get("/get-users", onGetUsers);
+// authRouter.get("/get-users", onGetUsers);
 
 export default authRouter;

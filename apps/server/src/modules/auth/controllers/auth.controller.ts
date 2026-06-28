@@ -30,8 +30,8 @@ export const onSignup = async (req: Request, res: Response) => {
         email,
         password: hashedPassword,
         accountType: "DEFAULT",
-        userRole: "ADMIN",
-        isVerified: false,
+        userRole: "USER",
+        isVerified: true,
       },
     });
 
@@ -193,7 +193,7 @@ export const onLogin = async (req: Request, res: Response) => {
     }
 
     // Allow only verified users
-    if (user.isVerified === false) {
+    if (user.isVerified === true) {
       res.status(401).json({ error: "User not verified!" });
       return;
     }
@@ -221,16 +221,16 @@ export const onLogin = async (req: Request, res: Response) => {
 
     res.cookie("accessToken", accessToken, {
       httpOnly: true,
-      sameSite: "lax",
-      secure: false,
+      sameSite: "none",
+      secure: true,
       maxAge: ACCESS_JWT_LIMIT,
       path: "/",
     });
 
     res.cookie("refreshToken", refreshToken, {
       httpOnly: true,
-      sameSite: "lax",
-      secure: false,
+      sameSite: "none",
+      secure: true,
       maxAge: REFRESH_JWT_LIMIT,
       path: "/",
     });
@@ -247,14 +247,14 @@ export const onLogout = async (req: Request, res: Response) => {
   try {
     res.clearCookie("accessToken", {
       httpOnly: true,
-      sameSite: "lax",
-      secure: false,
+      sameSite: "none",
+      secure: true,
       path: "/",
     });
     res.clearCookie("refreshToken", {
       httpOnly: true,
-      sameSite: "lax",
-      secure: false,
+      sameSite: "none",
+      secure: true,
       path: "/",
     });
     res.status(200).json({ message: "Logout success." });
@@ -298,16 +298,16 @@ export const onRefreshToken = async (req: AuthRequest, res: Response) => {
 
     res.cookie("accessToken", accessToken, {
       httpOnly: true,
-      sameSite: "lax",
-      secure: false,
+      sameSite: "none",
+      secure: true,
       maxAge: ACCESS_JWT_LIMIT,
       path: "/",
     });
 
     res.cookie("refreshToken", refreshToken, {
       httpOnly: true,
-      sameSite: "lax",
-      secure: false,
+      sameSite: "none",
+      secure: true,
       maxAge: REFRESH_JWT_LIMIT,
       path: "/",
     });
