@@ -8,8 +8,9 @@
   },
   "scripts": {
     "build": "npx tsc -b",
+    "migrate-dev": "npx prisma migrate dev",
     "generate-build": "npx prisma generate && pnpm build",
-    "migrate-dev": "npx prisma migrate dev"
+    "db:sync:prod": "pnpm migrate-dev && pnpm generate-build"
   },
   "type": "module",
   "keywords": [],

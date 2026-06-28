@@ -8,7 +8,6 @@ import {
   UpdateFormDTO,
 } from "../dto/form.dto.js";
 import { generateDocument, generateSlug } from "../utils/form.util.js";
-import { enqueueEmbedding } from "../../embedding/embedding.service.js";
 import {
   generateEmbedding,
   generateLLMQueryResponse,
@@ -19,7 +18,7 @@ import {
 } from "../../../config/llm.config.js";
 import type { SimilarResponse } from "../types/form.type.js";
 import { generateCode } from "../../auth/utils/auth.util.js";
-import { tryCatch } from "bullmq";
+import { enqueue } from "../../../queues/enqueue.js";
 
 // Get user forms handler
 export const onGetUserForms = async (req: AuthRequest, res: Response) => {
@@ -268,9 +267,13 @@ export const onSubmitForm = async (req: Request, res: Response) => {
         });
 
         // 5. Enqueue for embedding generation
-        await enqueueEmbedding({
-          responseEmbeddingId: responseEmbedding.id,
-          document: responseEmbedding.document ?? document,
+        await enqueue({
+          queue: "embedding",
+          type: "generate-embedding",
+          payload: {
+            responseEmbeddingId: responseEmbedding.id,
+            document: responseEmbedding.document ?? document,
+          },
         });
       },
       {

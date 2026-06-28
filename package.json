@@ -1,12 +1,13 @@
 {
-  "name": "with-tailwind",
+  "name": "Hirable",
   "private": true,
   "scripts": {
     "build": "turbo run build",
     "dev": "turbo run dev",
     "lint": "turbo run lint",
     "check-types": "turbo run check-types",
-    "format": "prettier --write \"**/*.{ts,tsx,md}\""
+    "format": "prettier --write \"**/*.{ts,tsx,md}\"",
+    "run:render" : "cd packages/database && pnpm db:sync:prod && cd ../../apps/server && pnpm build && pnpm start:prod"
   },
   "devDependencies": {
     "prettier": "^3.6.0",

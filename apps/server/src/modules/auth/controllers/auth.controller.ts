@@ -6,10 +6,10 @@ import {
   REFRESH_JWT_LIMIT,
 } from "../../../config/jwt.config.js";
 import type { AuthRequest } from "../../../middlewares/auth.middleware.js";
-import { enqueueEmail } from "../../email/email.service.js";
 import { OTP_TIME_LIMIT } from "../../../config/otp.config.js";
 import { prisma } from "@repo/database/client";
 import bcrypt from "bcrypt";
+import { enqueue } from "../../../queues/enqueue.js";
 
 // Signup handler
 export const onSignup = async (req: Request, res: Response) => {
@@ -52,10 +52,10 @@ export const onSignup = async (req: Request, res: Response) => {
     });
 
     // enqueue email
-    await enqueueEmail({
-      to: newUser.email,
-      emailType: "verify-email",
-      payload: { OTP: verificationCode },
+    await enqueue({
+      queue: "email",
+      type: "verify-email",
+      payload: { to: newUser.email, OTP: verificationCode },
     });
 
     res.status(201).json({ message: "Signup success.", userId: newUser.id });
@@ -126,10 +126,10 @@ export const onResendOTP = async (req: Request, res: Response) => {
       },
     });
 
-    await enqueueEmail({
-      to: user.email,
-      emailType: "verify-email",
-      payload: { OTP: verificationCode },
+    await enqueue({
+      queue: "email",
+      type: "verify-email",
+      payload: { to: user.email, OTP: verificationCode },
     });
 
     res.status(200).json({ message: "OTP regeneration success" });

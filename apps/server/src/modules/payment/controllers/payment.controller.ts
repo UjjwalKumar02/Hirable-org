@@ -4,7 +4,7 @@ import type { AuthRequest } from "../../../middlewares/auth.middleware.js";
 import { razorpay } from "../../../lib/razorpay.js";
 import { prisma } from "@repo/database/client";
 import { validateWebhookSignature } from "razorpay/dist/utils/razorpay-utils.js";
-import { enqueueEmail } from "../../email/email.service.js";
+import { enqueue } from "../../../queues/enqueue.js";
 
 // Create order handler
 export const onCreateOrder = async (req: AuthRequest, res: Response) => {
@@ -64,7 +64,7 @@ export const onCreateOrder = async (req: AuthRequest, res: Response) => {
         amount: order.amount,
         currency: order.currency,
         paymentOrderId: paymentOrder.id,
-        orderedCredits: creditPackage.credits
+        orderedCredits: creditPackage.credits,
       },
     });
   } catch (error: any) {
@@ -167,12 +167,10 @@ export const onVerifyPayment = async (req: AuthRequest, res: Response) => {
     );
 
     // enqueue email
-    await enqueueEmail({
-      to: userEmail,
-      emailType: "credit-purchase",
-      payload: {
-        credits: orderedCredits,
-      },
+    await enqueue({
+      queue: "email",
+      type: "credit-purchase",
+      payload: { to: userEmail, credits: orderedCredits },
     });
 
     res

@@ -1,59 +1,91 @@
-import { Job, Worker } from "bullmq";
-import { emailDLQ } from "../queues/email.queue.js";
 import { sendEmail } from "../lib/nodemailer.js";
-import { redisConnection } from "../lib/redis.js";
+import { dequeue } from "../queues/dequeue.js";
+import { moveToDead } from "../queues/moveToDead.js";
+import { addToProcessing, removeFromProcessing } from "../queues/processing.js";
+import { retry } from "../queues/retry.js";
+import {
+  resetSleepDelay,
+  sleepWithBackoff,
+} from "../utils/sleepWithExponentialDelay.js";
 
-const worker = new Worker(
-  "email_queue",
-  async (job: Job) => {
-    const { to, emailType, payload } = job.data;
-
-    console.log("Sending email from worker...");
-    console.log(to, emailType, payload);
-
+async function emailWorker() {
+  while (true) {
     try {
-      if (emailType === "verify-email") {
-        const OTP = payload.OTP;
-
-        await sendEmail({
-          to,
-          subject: "Email verification",
-          body: `To verify your email, please enter the ${OTP}`,
-        });
-      } else if (emailType === "credit-purchase") {
-        const credits = payload.credits;
-
-        await sendEmail({
-          to,
-          subject: "Credits purchase",
-          body: `The credits equals to ${credits} is added to your account`,
-        });
-      }
-    } catch (error: any) {
-      if (job.attemptsMade >= job.opts.attempts!) {
-        await emailDLQ.add("email_dlq", {
-          ...job.data,
-          error: error.message,
-          attemptsMade: job.attemptsMade,
-          failedAt: new Date(),
-        });
-
-        // remove from main queue
-        await job.remove();
+      const job = await dequeue({ queue: "email" });
+      if (!job) {
+        await sleepWithBackoff();
+        continue;
       }
 
-      throw error;
+      resetSleepDelay();
+
+      await addToProcessing({ queue: "email", job });
+
+      const type = job.type;
+      const payload = job.payload;
+      console.log(
+        `Email worker processing: ${job.id}-${type}-${JSON.stringify(payload)}`,
+      );
+
+      if (!payload || payload === undefined || payload === null) {
+        throw new Error(`Invalid payload: ${JSON.stringify(payload)}`);
+      }
+
+      try {
+        switch (type) {
+          case "verify-email":
+            await sendEmail({
+              to: payload.to,
+              subject: "Verify Email",
+              body: `OTP: ${payload.OTP}`,
+            });
+            break;
+
+          case "credit-purchase":
+            await sendEmail({
+              to: payload.to,
+              subject: "Credits purchased",
+              body: `Purchased Credits : ${payload.credits}`,
+            });
+            break;
+
+          default:
+            console.warn("Unknown job:", type);
+        }
+
+        await removeFromProcessing({ queue: "email", job });
+      } catch (error) {
+        console.log(`Handler failed, adding job to retry: ${job}`);
+
+        await removeFromProcessing({ queue: "email", job });
+
+        if (job.attempts >= job.maxAttempts) {
+          // move to dead
+          await moveToDead({
+            queue: "email",
+            job,
+            error: JSON.stringify(error),
+          });
+
+          console.log(`Max attempts reached, adding job to dead: ${job}`);
+        } else {
+          // retry
+          job.attempts++;
+          await retry({ queue: "email", job });
+        }
+      }
+    } catch (error) {
+      console.log("Worker failed: ", error);
+      await sleepWithBackoff();
     }
-  },
-  { connection: redisConnection },
-);
+  }
+}
 
 (async () => {
   try {
-    worker.on("failed", (job, err) => {
-      console.log(err);
-    });
-  } catch (error: any) {
-    console.log(error.message);
+    await emailWorker();
+    console.log("Email worker is running...");
+  } catch (error) {
+    console.log("Email worker startup error: ", error);
   }
 })();
