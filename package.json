@@ -7,7 +7,7 @@
     "lint": "turbo run lint",
     "check-types": "turbo run check-types",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
-    "run:render" : "cd packages/database && pnpm db:sync:prod && cd ../../apps/server && pnpm build && pnpm start:prod"
+    "run:render" : "cd packages/database && pnpm db:sync:prod && cd ../../apps/server && pnpm build && pnpm start"
   },
   "devDependencies": {
     "prettier": "^3.6.0",

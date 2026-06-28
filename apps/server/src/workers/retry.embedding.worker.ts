@@ -1,7 +1,7 @@
 import { redis } from "../lib/redis.js";
 import { sleepWithBackoff } from "../utils/sleepWithExponentialDelay.js";
 
-async function retryWorker() {
+export async function retryEmbeddingWorker() {
   while (true) {
     try {
       const jobs = await redis.zrangebyscore("embedding:retry", 0, Date.now());
@@ -22,11 +22,11 @@ async function retryWorker() {
   }
 }
 
-(async () => {
-  try {
-    await retryWorker();
-    console.log("Embedding retry worker is running...");
-  } catch (error) {
-    console.log("Embedding retry worker startup error: ", error);
-  }
-})();
+// (async () => {
+//   try {
+//     await retryWorker();
+//     console.log("Embedding retry worker is running...");
+//   } catch (error) {
+//     console.log("Embedding retry worker startup error: ", error);
+//   }
+// })();

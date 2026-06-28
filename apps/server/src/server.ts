@@ -7,6 +7,10 @@ import formRouter from "./modules/form/routes/form.route.js";
 import cookieParser from "cookie-parser";
 import cors from "cors";
 import "dotenv/config";
+import { emailWorker } from "./workers/email.worker.js";
+import { embeddingWorker } from "./workers/embedding.worker.js";
+import { retryEmailWorker } from "./workers/retry.email.worker.js";
+import { retryEmbeddingWorker } from "./workers/retry.embedding.worker.js";
 
 const PORT = process.env.PORT;
 const app = express();
@@ -33,6 +37,13 @@ app.get("/health", (req: Request, res: Response) => {
   res.status(200).json({ message: "Health route is fine." });
 });
 
-app.listen(PORT, () => {
-  console.log(`Server is running on ${PORT}`);
-});
+(async () => {
+  app.listen(PORT, () => {
+    console.log(`Server is running on ${PORT}`);
+  });
+
+  await emailWorker();
+  await embeddingWorker();
+  await retryEmailWorker();
+  await retryEmbeddingWorker();
+})();

@@ -9,7 +9,7 @@ import {
   sleepWithBackoff,
 } from "../utils/sleepWithExponentialDelay.js";
 
-async function embeddingWorker() {
+export async function embeddingWorker() {
   while (true) {
     try {
       const job = await dequeue({ queue: "embedding" });
@@ -82,11 +82,11 @@ async function embeddingWorker() {
   }
 }
 
-(async () => {
-  try {
-    await embeddingWorker();
-    console.log("Embedding worker is running...");
-  } catch (error) {
-    console.log("Worker startup error: ", error);
-  }
-})();
+// (async () => {
+//   try {
+//     await embeddingWorker();
+//     console.log("Embedding worker is running...");
+//   } catch (error) {
+//     console.log("Worker startup error: ", error);
+//   }
+// })();

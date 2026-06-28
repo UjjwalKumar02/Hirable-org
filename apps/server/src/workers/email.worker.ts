@@ -8,7 +8,7 @@ import {
   sleepWithBackoff,
 } from "../utils/sleepWithExponentialDelay.js";
 
-async function emailWorker() {
+export async function emailWorker() {
   while (true) {
     try {
       const job = await dequeue({ queue: "email" });
@@ -81,11 +81,11 @@ async function emailWorker() {
   }
 }
 
-(async () => {
-  try {
-    await emailWorker();
-    console.log("Email worker is running...");
-  } catch (error) {
-    console.log("Email worker startup error: ", error);
-  }
-})();
+// (async () => {
+//   try {
+//     await emailWorker();
+//     console.log("Email worker is running...");
+//   } catch (error) {
+//     console.log("Email worker startup error: ", error);
+//   }
+// })();

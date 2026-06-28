@@ -6,7 +6,7 @@ export async function sleepWithBackoff() {
   console.log(`Sleep for ${delay + jitter}`);
   await new Promise((resolve) => setTimeout(resolve, delay + jitter));
   
-  delay = Math.min(delay * 4, 100000);
+  delay = Math.min(delay * 4, 90000);
 }
 
 export function resetSleepDelay() {

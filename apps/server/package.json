@@ -12,7 +12,7 @@
     "start:retry-email-worker": "node ./dist/workers/retry.email.worker.js",
     "start:retry-embedding-worker": "node ./dist/workers/retry.embedding.worker.js",
     "start:workers": "concurrently \"pnpm start:email-worker\" \"pnpm start:embedding-worker\" \"pnpm start:retry-email-worker\" \"pnpm start:retry-embedding-worker\"",
-    "start:prod": "concurrently \"pnpm start\" \"pnpm start:workers\""
+    "start:dev": "concurrently \"pnpm start\" \"pnpm start:workers\""
   },
   "type": "module",
   "keywords": [],
