@@ -4,7 +4,7 @@ import { API_BASE_URL } from "../../../config";
 import Button from "../../../components/Button";
 import { useContext, useEffect, useState } from "react";
 import { api } from "../../../lib/api";
-import { Form } from "../../../types/form.type";
+// import { Form } from "../../../types/form.type";
 import { UserContext } from "../../../context/userContext";
 import Navbar from "../../../components/Navbar";
 import CreateFormPopup from "./_components/CreateFormPopup";
@@ -39,10 +39,12 @@ export default function Home() {
 
       localStorage.setItem("username", jsonData.user.username);
       localStorage.setItem("credits", jsonData.user.creditBalance);
+      localStorage.setItem("userRole", jsonData.user.userRole);
 
       userContext.setUser({
         username: jsonData.user.username,
         creditBalance: jsonData.user.creditBalance,
+        userRole: jsonData.user.userRole
       });
     } catch (error) {
       alert("Internal server error");

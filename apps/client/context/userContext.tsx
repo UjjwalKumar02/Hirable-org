@@ -5,6 +5,7 @@ import { createContext, useEffect, useState } from "react";
 // Local user type
 interface LocalUser {
   username: string;
+  userRole: string;
   creditBalance: number;
 }
 
@@ -32,11 +33,13 @@ export default function UserContextProvider({
       setUser({
         username: localStorage.getItem("username")!,
         creditBalance: Number(localStorage.getItem("credits")),
+        userRole: localStorage.getItem("userRole")!,
       });
 
       console.log("Local updation to user context...", {
         username: localStorage.getItem("username")!,
         creditBalance: Number(localStorage.getItem("credits")),
+        userRole: localStorage.getItem("userRole")!
       });
     }
   }, []);

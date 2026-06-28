@@ -15,9 +15,11 @@ import FormIcon from "../icons/FormIcon";
 import DesignIcon from "../icons/DesignIcon";
 import DashboardIcon from "../icons/DashboardIcon";
 import QueryIcon from "../icons/QueryIcon";
+import { UserContext } from "../context/userContext";
 
 export default function Sidebar() {
   const formsContext = useContext(FormsContext);
+  const userContext = useContext(UserContext);
   const router = useRouter();
 
   // Logout handler
@@ -122,13 +124,17 @@ export default function Sidebar() {
           <p>Ledger</p>
         </div>
 
-        <div
-          onClick={() => router.push("/a-dashboard")}
-          className="flex items-center gap-1.5 cursor-pointer"
-        >
-          <AdminIcon />
-          <p>Admin</p>
-        </div>
+        {userContext !== null &&
+          userContext.user &&
+          userContext.user.userRole === "ADMIN" && (
+            <div
+              onClick={() => router.push("/a-dashboard")}
+              className="flex items-center gap-1.5 cursor-pointer"
+            >
+              <AdminIcon />
+              <p>Admin</p>
+            </div>
+          )}
 
         <div
           onClick={handleLogout}

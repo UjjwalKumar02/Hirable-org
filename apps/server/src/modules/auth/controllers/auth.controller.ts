@@ -193,7 +193,7 @@ export const onLogin = async (req: Request, res: Response) => {
     }
 
     // Allow only verified users
-    if (user.isVerified === true) {
+    if (user.isVerified === false) {
       res.status(401).json({ error: "User not verified!" });
       return;
     }

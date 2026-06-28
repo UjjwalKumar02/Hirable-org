@@ -12,9 +12,6 @@ interface NavbarProps {
 
 export default function Navbar(props: NavbarProps) {
   const context = useContext(UserContext);
-  if (!context || !context.user) {
-    return <>Loading...</>;
-  }
 
   return (
     <div className="w-full flex justify-between items-center border-b border-gray-200 mt-1 py-3 px-5">
@@ -30,7 +27,7 @@ export default function Navbar(props: NavbarProps) {
           className="flex items-center gap-1.5"
         >
           <UserIcon />
-          <p>{context.user.username}</p>
+          <p>{context && context.user ? context.user.username : "User"}</p>
         </Button>
 
         <Button
@@ -39,7 +36,8 @@ export default function Navbar(props: NavbarProps) {
           onClick={() => console.log("first")}
           className="flex items-center gap-1"
         >
-          <WalletIcon /> Credits : {context.user.creditBalance}
+          <WalletIcon /> Credits :{" "}
+          {context && context.user ? context.user.creditBalance : "0.0"}
         </Button>
       </div>
     </div>
