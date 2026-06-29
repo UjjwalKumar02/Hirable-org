@@ -124,7 +124,7 @@ export default function FormDesignClient({ slug }: { slug: string }) {
       {/* Main Content */}
       <div className="w-full flex flex-col">
         {/* Nav */}
-        <Navbar pageTitle={`Design -> ${formTitle} `} />
+        <Navbar pageTitle={`Design: ${formTitle} `} />
 
         {/* Content */}
         <div className="min-h-screen flex justify-center">

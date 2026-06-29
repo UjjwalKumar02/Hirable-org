@@ -1,11 +1,13 @@
-let delay = 1000 + Math.random() * 1000;
+let delay = 1000;
 
 export async function sleepWithBackoff() {
-  const jitter = Math.random() * 500;
+  console.log(`Sleep (exp) for ${delay}`);
+  await new Promise((resolve) => setTimeout(resolve, delay));
 
-  console.log(`Sleep for ${delay + jitter}`);
-  await new Promise((resolve) => setTimeout(resolve, delay + jitter));
-  
+  if (delay === 90000) {
+    delay = 1000;
+  }
+
   delay = Math.min(delay * 4, 90000);
 }
 

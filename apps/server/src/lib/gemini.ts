@@ -65,7 +65,7 @@ export const generateLLMQueryResponse = async ({
 
   try {
     const response = await geminiClient.models.generateContent({
-      model: "gemini-2.5-flash-lite",
+      model: "gemini-2.5-flash",
       contents: prompt,
       config: {
         responseMimeType: "application/json",

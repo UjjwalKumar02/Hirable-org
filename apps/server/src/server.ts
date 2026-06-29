@@ -7,10 +7,7 @@ import formRouter from "./modules/form/routes/form.route.js";
 import cookieParser from "cookie-parser";
 import cors from "cors";
 import "dotenv/config";
-import { emailWorker } from "./workers/email.worker.js";
-import { embeddingWorker } from "./workers/embedding.worker.js";
-import { retryEmailWorker } from "./workers/retry.email.worker.js";
-import { retryEmbeddingWorker } from "./workers/retry.embedding.worker.js";
+import { prodWorker } from "./workers/prod.worker.js";
 
 const PORT = process.env.PORT;
 const app = express();
@@ -42,8 +39,5 @@ app.get("/health", (req: Request, res: Response) => {
     console.log(`Server is running on ${PORT}`);
   });
 
-  await emailWorker();
-  await embeddingWorker();
-  await retryEmailWorker();
-  await retryEmbeddingWorker();
+  await prodWorker();
 })();

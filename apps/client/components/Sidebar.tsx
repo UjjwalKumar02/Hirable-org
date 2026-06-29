@@ -6,7 +6,7 @@ import CreditIcon from "../icons/PurchaseIcon";
 import HomeIcon from "../icons/HomeIcon";
 import { LogoutIcon } from "../icons/LogoutIcon";
 import Button from "./Button";
-import { API_BASE_URL } from "../config";
+import { API_BASE_URL, FE_URL } from "../config";
 import { useRouter } from "next/navigation";
 import { useContext } from "react";
 import { FormsContext } from "../context/formsContext";
@@ -78,7 +78,7 @@ export default function Sidebar() {
                 <FormIcon />
                 <p>{fs.title}</p>
               </div>
-              <Link href={`http://localhost:3001/form/${fs.slug}/design`}>
+              <Link href={`${FE_URL}/form/${fs.slug}/design`}>
                 <div
                   onClick={() => console.log("Navigating...")}
                   className="flex items-center gap-1.5 cursor-pointer pl-3"
@@ -87,7 +87,7 @@ export default function Sidebar() {
                   <p>Design</p>
                 </div>
               </Link>
-              <Link href={`http://localhost:3001/form/${fs.slug}/dashboard`}>
+              <Link href={`${FE_URL}/form/${fs.slug}/dashboard`}>
                 <div
                   onClick={() => console.log("Navigating...")}
                   className="flex items-center gap-1.5 cursor-pointer pl-3"
@@ -96,7 +96,7 @@ export default function Sidebar() {
                   <p>Dashboard</p>
                 </div>
               </Link>
-              <Link href={`http://localhost:3001/form/${fs.slug}/query`}>
+              <Link href={`${FE_URL}/form/${fs.slug}/query`}>
                 <div
                   onClick={() => console.log("Navigating...")}
                   className="flex items-center gap-1.5 cursor-pointer pl-3"

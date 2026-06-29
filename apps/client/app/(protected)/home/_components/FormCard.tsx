@@ -3,6 +3,7 @@
 import Button from "../../../../components/Button";
 import Link from "next/link";
 import formatDate from "../../../../lib/helpers/formatDate";
+import { FE_URL } from "../../../../config";
 
 interface FormCardProps {
   slug: string;
@@ -28,7 +29,7 @@ export default function FormCard(props: FormCardProps) {
         </div>
 
         <div className="flex items-center gap-3">
-          <Link href={`http://localhost:3001/form/${props.slug}/design`}>
+          <Link href={`${FE_URL}/form/${props.slug}/design`}>
             <Button
               variant="secondary"
               size="md"
@@ -38,7 +39,7 @@ export default function FormCard(props: FormCardProps) {
             </Button>
           </Link>
 
-          <Link href={`http://localhost:3001/form/${props.slug}/dashboard`}>
+          <Link href={`${FE_URL}/form/${props.slug}/dashboard`}>
             <Button
               variant="secondary"
               size="md"

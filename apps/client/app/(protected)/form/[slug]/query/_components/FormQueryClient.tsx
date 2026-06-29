@@ -130,15 +130,15 @@ export default function FormQueryClient({ slug }: { slug: string }) {
       {/* Main Content */}
       <div className="w-full flex flex-col">
         {/* Nav */}
-        <Navbar pageTitle={`Query -> ${formDetails?.title ?? "Error"} `} />
+        <Navbar pageTitle={`AI Query: ${formDetails?.title ?? "Error"} `} />
 
         {/* Content */}
         <div className="min-h-screen flex justify-center">
           <div className="min-w-4xl max-w-4xl ">
             {/* Header */}
-            <div className="w-full flex flex-col gap-6 items-center justify-center mt-8 border border-gray-200 p-4 rounded-md shadow-xs">
+            <div className="w-full flex flex-col gap-6 items-center justify-center mt-8 p-4">
               <h2 className="font-medium text-lg">
-                Query : {formDetails?.title ?? "Error"}
+                AI Query : {formDetails?.title ?? "Error"}
               </h2>
 
               {/* Chat box container */}
@@ -146,7 +146,7 @@ export default function FormQueryClient({ slug }: { slug: string }) {
                 <input
                   type="text"
                   placeholder="Write your query here..."
-                  className="outline-none px-3 py-3 border border-gray-200 rounded-md w-full"
+                  className="outline-none px-3 py-3 border border-gray-200 rounded-lg w-full"
                   value={query?.question ?? ""}
                   onChange={(e) =>
                     setQuery({

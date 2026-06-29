@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { API_BASE_URL } from "../../../../../../config";
+import { API_BASE_URL, FE_URL } from "../../../../../../config";
 import { api } from "../../../../../../lib/api";
 import { Form } from "../../../../../../types/form.type";
 import { Submission } from "../../../../../../types/submission.type";
@@ -126,11 +126,9 @@ export default function FormDashboardClient({ slug }: { slug: string }) {
     }
   };
 
-  //
+  // Copy link handler
   const handleCopy = async () => {
-    await navigator.clipboard.writeText(
-      `http://localhost:3001/form/${slug}/submit`,
-    );
+    await navigator.clipboard.writeText(`${FE_URL}/form/${slug}/submit`);
 
     alert("Copied to the clipboard");
   };
@@ -167,7 +165,7 @@ export default function FormDashboardClient({ slug }: { slug: string }) {
                   <ToggleIcon /> Toggle Publish
                 </Button>
 
-                <Link href={`http://localhost:3001/form/${slug}/query`}>
+                <Link href={`${FE_URL}/form/${slug}/query`}>
                   <Button
                     variant="secondary"
                     size="md"
@@ -190,7 +188,7 @@ export default function FormDashboardClient({ slug }: { slug: string }) {
               </div>
             </div>
             {/* Form header card */}
-            <div className="flex flex-col gap-5 mt-5 border border-gray-200 px-8 py-8 rounded-md shadow-xs">
+            <div className="flex flex-col gap-5 mt-5 border border-gray-200 px-8 py-8 rounded-lg shadow-xs">
               <div className="flex items-center justify-between">
                 <h2 className="text-lg font-medium">
                   {formDetails?.title ?? "Error"}
@@ -228,7 +226,7 @@ export default function FormDashboardClient({ slug }: { slug: string }) {
             </div>
 
             {/* Response table */}
-            <div className="mt-5 flex flex-col gap-5 bg-white border border-gray-200 shadow-xs rounded-md p-8">
+            <div className="mt-5 flex flex-col gap-5 bg-white border border-gray-200 shadow-xs rounded-lg p-6">
               <h1 className="text-lg font-medium pl-1">Responses</h1>
 
               {/* X scroll */}
